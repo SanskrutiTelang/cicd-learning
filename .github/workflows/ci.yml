@@ -12,11 +12,11 @@ permissions:
 
 jobs:
   test:
-    name: Run unit tests
+    name: Unit tests
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up Python
@@ -24,5 +24,22 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Run unit tests
+      - name: Run tests
         run: python -m unittest discover -s tests -v
+
+  quality:
+    name: Code quality
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check Python syntax
+        run: python -m compileall -q app tests
+
