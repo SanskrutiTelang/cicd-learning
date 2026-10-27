@@ -43,3 +43,25 @@ jobs:
       - name: Check Python syntax
         run: python -m compileall -q app tests
 
+   
+  package:
+    name: Package application
+    needs: [test, quality]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create package
+        run: |
+          mkdir -p dist
+          tar -czf dist/cicd-learning.tar.gz app tests
+
+      - name: Upload package
+        uses: actions/upload-artifact@v4
+        with:
+          name: cicd-learning-package
+          path: dist/cicd-learning.tar.gz
+     
+
