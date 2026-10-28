@@ -3,16 +3,18 @@ name: Python CI
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
-    branches: [main]
+    branches:
+      - main
 
 permissions:
   contents: read
 
 jobs:
   test:
-    name: Unit tests
+    name: Run Python tests
     runs-on: ubuntu-latest
 
     steps:
@@ -24,11 +26,11 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Run tests
+      - name: Run unit tests
         run: python -m unittest discover -s tests -v
 
   quality:
-    name: Code quality
+    name: Check Python syntax
     runs-on: ubuntu-latest
 
     steps:
@@ -40,12 +42,11 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Check Python syntax
+      - name: Compile Python files
         run: python -m compileall -q app tests
 
-   
   package:
-    name: Package application
+    name: Create application package
     needs: [test, quality]
     runs-on: ubuntu-latest
 
@@ -53,15 +54,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Create package
+      - name: Create archive
         run: |
           mkdir -p dist
           tar -czf dist/cicd-learning.tar.gz app tests
 
-      - name: Upload package
+      - name: Upload archive
         uses: actions/upload-artifact@v4
         with:
           name: cicd-learning-package
           path: dist/cicd-learning.tar.gz
-     
 
